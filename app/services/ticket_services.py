@@ -45,11 +45,6 @@ class TicketService:
             return None
         return ticket
 
-    """
-    Returns:
-    Este retorna el o los autos que hayan con esa concidencia de Patente  
-    """
-
     def get_by_patente(self, car_patent):
 
         stm = (
@@ -88,7 +83,6 @@ class TicketService:
         total_minutes = ceil(delta.total_seconds() / 60)
         return total_minutes * cost_per_minute
 
-    # Falta gestionar validación si el ticket ya está pagado. Retornar error descriptivo.
     def pay_ticket(self, ticket_id: int):
         amount = self.calculate_amount(ticket_id)
         if amount is None:
