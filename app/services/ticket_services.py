@@ -8,9 +8,14 @@ from app.exceptions import TicketPaidError
 
 
 class TicketService:
-    def get_open_tickets(self):
+    def get_open_tickets(self, limit: int = 10, offset: int = 0):
         try:
-            stm = select(Ticket).where(Ticket.estado == "abierto")
+            stm = (
+                select(Ticket)
+                .where(Ticket.estado == "abierto")
+                .limit(limit)
+                .offset(offset)
+            )
             result = session.execute(stm).scalars().all()
             if not result:
                 return []
