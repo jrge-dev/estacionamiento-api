@@ -2,7 +2,12 @@ from fastapi import APIRouter, FastAPI, HTTPException
 from app.services.auth_service import get_current_active_user
 from app.services.ticket_services import ticket_service
 from pydantic import BaseModel
-from app.schemas.schemas import TicketOpenIn, TicketOpenOut, TicketPayIn
+from app.schemas.schemas import (
+    PaginatedTicketOpenOut,
+    TicketOpenIn,
+    TicketOpenOut,
+    TicketPayIn,
+)
 from app.schemas.schemas import ReceiptPayOut
 from app.exceptions import TicketPaidError
 from typing import Annotated, List
@@ -14,10 +19,17 @@ router = APIRouter(
 )
 
 
-@router.get("/open", response_model=List[TicketOpenOut])
-def get_ticket(token: Annotated[str, Depends(get_current_active_user)]):
-    result = ticket_service.get_open_tickets()
-    return result
+@router.get("/open", response_model=PaginatedTicketOpenOut)
+def get_ticket(
+    limit: int, offset: int, token: Annotated[str, Depends(get_current_active_user)]
+):
+    result = ticket_service.get_open_tickets(limit=limit, offset=offset)
+    return {
+        "total_data": len(result),
+        "offset": offset,
+        "limit": limit,
+        "data": result,
+    }
 
 
 @router.post("", response_model=TicketOpenOut)
