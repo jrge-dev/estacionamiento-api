@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas.schemas import Car, CarCreate
+from app.schemas.schemas import Car, CarCreate, PaginatedCar
 from app.services.car_services import car_service
 from typing import List, Annotated
 from app.services.auth_service import get_current_active_user
@@ -11,10 +11,12 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=List[Car])
-def get_cars(token: Annotated[str, Depends(get_current_active_user)]):
+@router.get("", response_model=PaginatedCar)
+def get_cars(
+    offset: int, limit: int, token: Annotated[str, Depends(get_current_active_user)]
+):
     result = car_service.get_cars()
-    return result
+    return {"total_data": len(result), "offset": offset, "limit": limit, "data": result}
 
 
 @router.delete("")
