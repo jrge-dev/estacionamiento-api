@@ -1,5 +1,13 @@
+from typing import Any
 from pydantic import BaseModel
 from datetime import datetime
+
+
+class Paginated(BaseModel):
+    total_data: int
+    offset: int
+    limit: int
+    data: list[Any]
 
 
 class Token(BaseModel):
@@ -42,7 +50,11 @@ class Car(CarBase):
     fecha_actualizacion: datetime
 
 
-class TickerBase(BaseModel):
+class PaginatedCar(Paginated):
+    data: list[Car]
+
+
+class TicketBase(BaseModel):
     id: int
 
 
@@ -50,13 +62,17 @@ class TicketOpenIn(BaseModel):
     patente: str
 
 
-class TicketOpenOut(TickerBase):
+class TicketOpenOut(TicketBase):
     auto: CarTicket
     fecha_creacion: datetime
     estado: str
 
 
-class TicketPayIn(TickerBase):
+class PaginatedTicketOpenOut(Paginated):
+    data: list[TicketOpenOut]
+
+
+class TicketPayIn(TicketBase):
     pass
     # Agregar método pago.
 
