@@ -118,5 +118,12 @@ class TicketService:
     def validate_exit(self):
         pass
 
+    def check_ticket_withcar(self, id_car):
+        stm = select(Ticket).where(Ticket.id_auto == id_car)
+
+        result = session.execute(stm).scalar_one_or_none()
+        session.commit()
+        return result
+
 
 ticket_service = TicketService()

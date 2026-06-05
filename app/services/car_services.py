@@ -1,3 +1,4 @@
+from sqlalchemy.engine import result
 from app.models.models import Auto
 from sqlalchemy import select
 from app.db.conexion import session
@@ -42,6 +43,36 @@ class CarService:
             session.refresh(car)
             return car
         except Exception as err:
+            raise err
+
+    def delete_car(self, id_car: int):
+        """
+        Delete a car by ID: performs a logical delete (deactivates status)
+        if it has associated tickets, or a physical delete if it has none.
+        """
+
+        from app.services.ticket_services import TicketService
+
+        try:
+            car = self.get_by_id(id_car)
+            if not car:
+                return "El auto no existe"
+
+            ticket = TicketService()
+            check = ticket.check_ticket_withcar(id_car=id_car)
+
+            if check is not None:
+                car.estado = "desactivo"
+                session.commit()
+                return "Auto desactivado correctamente"
+
+            else:
+                session.delete(car)
+                session.commit()
+                return "Auto eliminado definitivamente de la base de datos"
+
+        except Exception as err:
+            session.rollback()
             raise err
 
 

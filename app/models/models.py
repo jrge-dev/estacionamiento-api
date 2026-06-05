@@ -67,6 +67,11 @@ class Auto(Base):
     fecha_actualizacion: Mapped[datetime.datetime] = mapped_column(
         TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now()
     )
+    estado: Mapped[str] = mapped_column(
+        Enum("activo", "desactivo", name="estado_auto"),
+        default="activo",
+        nullable=True,
+    )
 
     ticket = relationship("Ticket", back_populates="auto")
 
@@ -134,8 +139,3 @@ class Boleta(Base):
 
     ticket = relationship("Ticket", back_populates="boleta")
     tarifa = relationship("Tarifa", back_populates="boleta")
-
-
-if __name__ == "__main__":
-    Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)

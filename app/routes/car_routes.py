@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.schemas.schemas import Car, CarCreate, PaginatedCar
 from app.services.car_services import car_service
-from typing import List, Annotated
+from typing import Annotated
 from app.services.auth_service import get_current_active_user
 from fastapi import Depends
 
@@ -21,7 +21,11 @@ def get_cars(
 
 @router.delete("")
 def delete_car(id: int, token: Annotated[str, Depends(get_current_active_user)]):
-    pass
+    try:
+        result = car_service.delete_car(id)
+        return result
+    except Exception:
+        raise HTTPException(status_code=400, detail="Error al eliminar")
 
 
 @router.post("", response_model=Car)
