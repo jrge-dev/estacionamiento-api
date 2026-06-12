@@ -73,21 +73,9 @@ La solución fue diseñada para ejecutarse sobre una infraestructura sencilla, p
 
 ## Diagrama BD
 
-> Modelo de datos utilizado por la aplicación.
+Modelo de entidad relación de la base de datos de la aplicación.
 
-``` Entidades
-Usuario
-  |
-Perfil
-
-Auto
-  |
-Ticket
-  |
-Boleta
-  |
-Tarifa
-```
+![Entidad Relacio base de datos](docs/assets//er-basedatos.webp)
 
 ---
 
